@@ -53,68 +53,43 @@ public class GameManager {
             var inWord = false;
             _messenger.Print(answer.toString());
             _messenger.Print(word);
-            _messenger.Print("Ошибок "+mistakes);
+            _messenger.Print("Ошибок " + mistakes);
             _messenger.Print("Введите букву");
-            var letter = _scanner.nextLine().toLowerCase().charAt(0);
-            for (int i = 0; i<word.length(); i++) {
-                if(wordSb.charAt(i)==letter) {
-                    answer.setCharAt(i,letter);
-                    inWord = true;
-                };
+            var input = _scanner.nextLine().toLowerCase();
+            if (!CheckInput(input)) {
+                _messenger.Print("Неправильный ввод, принимаются только символы русского алфавита, не более 1 символа");
+                continue;
             }
-            if (!inWord){
+            for (int i = 0; i < word.length(); i++) {
+                var letter = input.charAt(0);
+                if (wordSb.charAt(i) == letter) {
+                    answer.setCharAt(i, letter);
+                    inWord = true;
+                }
+
+            }
+            if (!inWord) {
                 mistakes++;
             }
-            if (mistakes>=_mistakesLimint){
+            if (mistakes >= _mistakesLimint) {
                 isPlaying = false;
                 _messenger.Print("Вы проиграли");
             }
-            if (word.contentEquals(answer)){
+            if (word.contentEquals(answer)) {
+                _messenger.Print("Вы выиграли! congratulations");
                 isPlaying = false;
             }
 
         }
     }
-//    private void StartGame() {
-//        boolean isPlaying = true;
-//        int mistakes = 0;
-//        var word = _words.get(_rand.nextInt(_words.size()));
-//        var wordSb = new StringBuilder(word);
-//        var answer = new StringBuilder(".".repeat(word.length()));
-//        while (isPlaying) {
-//            _messenger.Print(answer.toString());
-//            _messenger.Print(word);
-//            _messenger.Print("Ошибок 0");
-//            _messenger.Print("Введите букву");
-//            var correctInput = false;
-//            char currentChar = '1';
-//            while (!correctInput) {
-//                var in = new Scanner(System.in);
-//                var input = in.nextLine();
-//
-//                if (input.length() != 1) {
-//                    correctInput = true;
-//                    currentChar = input.charAt(0);
-//
-//                }
-//            }
-//
-//            for (int i = 0; i < word.length(); i++) {
-//                var flag = false;
-//                if (wordSb.charAt(i) == currentChar) {
-//                    flag = true;
-//                    answer.setCharAt(i, currentChar);
-//                }
-//                if (!flag) {
-//                    mistakes++;
-//                }
-//            }
-//
-//
-//        }
-//
-//
-//    }
+
+    private boolean CheckInput(String input) {
+        var isOneChar = input.length() == 1;
+        var isCyrillic = Character.UnicodeBlock.of(input.charAt(0)) == Character.UnicodeBlock.CYRILLIC;
+        return isOneChar && isCyrillic;
+
+    }
+
 
     private String CreateString(int length) {
         return ".".repeat(Math.max(0, length));
