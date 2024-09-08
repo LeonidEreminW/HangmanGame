@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -48,6 +49,7 @@ public class GameManager {
         var word = _words.get(_rand.nextInt(_words.size()));
         var wordSb = new StringBuilder(word.toLowerCase());
         var answer = new StringBuilder(".".repeat(word.length()));
+        var usedCharacters = new HashSet<Character>();
         var mistakes = 0;
         while (isPlaying) {
             var inWord = false;
@@ -60,10 +62,17 @@ public class GameManager {
                 _messenger.Print("Неправильный ввод, принимаются только символы русского алфавита, не более 1 символа");
                 continue;
             }
+            var character = input.charAt(0);
+            if (IsCharacterUsed(usedCharacters,character)) {
+                _messenger.Print("Такая буква уже была");
+                continue;
+            }
+
+            usedCharacters.add(character);
+
             for (int i = 0; i < word.length(); i++) {
-                var letter = input.charAt(0);
-                if (wordSb.charAt(i) == letter) {
-                    answer.setCharAt(i, letter);
+                if (wordSb.charAt(i) == character) {
+                    answer.setCharAt(i, character);
                     inWord = true;
                 }
 
@@ -87,11 +96,18 @@ public class GameManager {
         var isOneChar = input.length() == 1;
         var isCyrillic = Character.UnicodeBlock.of(input.charAt(0)) == Character.UnicodeBlock.CYRILLIC;
         return isOneChar && isCyrillic;
+    }
 
+    private boolean IsCharacterUsed(HashSet<Character> usedCharacters, Character testChar) {
+        var result = false;
+        for (Character character : usedCharacters) {
+            if (character.equals(testChar)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
 
-    private String CreateString(int length) {
-        return ".".repeat(Math.max(0, length));
-    }
 }
