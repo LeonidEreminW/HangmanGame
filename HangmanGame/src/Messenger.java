@@ -1,5 +1,5 @@
 public class Messenger {
-    public void Print(String message) {
+    public void print(String message) {
         System.out.println(message);
     }
 }

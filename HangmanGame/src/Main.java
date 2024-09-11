@@ -4,6 +4,6 @@ public class Main {
 
     public static void main(String[] args) {
         var gameManager = new GameManager();
-        gameManager.Start();
+        gameManager.start();
     }
 }
